@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3"
 import { open } from "sqlite"
 
 interface Friend {
-  uuid: string
+  address: string
 }
 
 const openDb = async () =>
@@ -14,24 +14,24 @@ const openDb = async () =>
 /** run migrations to prepare a new db */
 export const prepareDB = async (): Promise<void> => {
   const db = await openDb()
-  await db.exec("CREATE TABLE friends (uuid TEXT)")
+  await db.exec("CREATE TABLE friends (address TEXT)")
 }
 
-/** get list of all friend uuids */
+/** get list of all friend device addresses */
 export const getFriends = async (): Promise<string[]> => {
   const db = await openDb()
   const friends = await db.all<Friend[]>("SELECT * FROM friends")
-  return friends.map(friend => friend.uuid)
+  return friends.map(friend => friend.address)
 }
 
-/** add a new uuid to the friend list */
-export const addFriend = async (id: string): Promise<void> => {
+/** add a new device address to the friend list */
+export const addFriend = async (address: string): Promise<void> => {
   const db = await openDb()
-  await db.run(`INSERT INTO friends VALUES ("${id}")`)
+  await db.run(`INSERT INTO friends VALUES ("${address}")`)
 }
 
-/** remove a uuid from the friend list */
+/** remove a device address from the friend list */
 export const unFriend = async (id: string): Promise<void> => {
   const db = await openDb()
-  await db.run(`DELETE FROM friends WHERE uuid=${id}`)
+  await db.run(`DELETE FROM friends WHERE address=${id}`)
 }

@@ -1,4 +1,5 @@
 node_modules
+client/.env
 
 # don't save image uploads
 server/uploads

@@ -1,15 +1,19 @@
-import noble from "@abandonware/noble"
-// import Webcam from "node-webcam"
-import fetch from "cross-fetch"
+// import noble from "@abandonware/noble"
+// import Camera from "camera"
+// import fetch from "cross-fetch"
+// import fs from "fs"
 // import config from "./config.json"
-import { getFriends, addFriend } from "./db"
+// import { getFriends, addFriend } from "./db"
+
+import * as cv from "opencv4nodejs"
 
 require("dotenv").config()
 
-// const webcam = Webcam.create()
-// const capture = promisify(webcam.capture)
+const webcam = Camera.createStream()
 
-// cameralib.capture().pipe(f)
+webcam.on("data", buffer => {
+  fs.writeFileSync("cam.png", buffer)
+})
 
 // console.log(`Capturing frames at ${config.fps}fps...`)
 

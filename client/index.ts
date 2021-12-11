@@ -1,25 +1,23 @@
-// import noble from "@abandonware/noble"
-// import Camera from "camera"
-// import fetch from "cross-fetch"
-// import fs from "fs"
-// import config from "./config.json"
-// import { getFriends, addFriend } from "./db"
-
-import * as cv from "opencv4nodejs"
-
 require("dotenv").config()
+// const Webcam = require("node-webcam")
+// const fetch = require("cross-fetch")
 
-const webcam = Camera.createStream()
+// import http from "http"
+import "./bluetooth.ts"
 
-webcam.on("data", buffer => {
-  fs.writeFileSync("cam.png", buffer)
-})
+// const cam = Webcam.create({
+//   callbackReturn: "base64",
+// })
 
-// console.log(`Capturing frames at ${config.fps}fps...`)
+// const loop = async () => {
+//   cam.capture("tmp/frame", async (err: any, data: any) => {
+//     console.log(data)
 
-// const captureLoop = async () => {
-//   // const { err, data } = await capture("tmp/frame")
-
+//     const res = await fetch(process.env.INBOUND_SERVER_URI as string, {
+//       method: "POST",
+//       body: data,
+//     })
+//   })
 // }
 
-// setInterval(captureLoop, config.fps * 1000)
+// setInterval(loop, 1000)

@@ -7,7 +7,7 @@ interface Friend {
 
 const openDb = async () =>
   await open({
-    filename: "/tmp/database.db",
+    filename: "./tmp/database.db",
     driver: sqlite3.Database,
   })
 

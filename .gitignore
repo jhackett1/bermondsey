@@ -1,1 +1,8 @@
 node_modules
+
+# don't save image uploads
+server/uploads
+
+# don't save image captures
+client/tmp/*.jpg
+client/tmp/*.png

@@ -1,34 +1,40 @@
 require("dotenv").config()
+const Webcam = require("node-webcam")
+
 import chalk from "chalk"
-import { friendPresent } from "./bluetooth"
-// const Webcam = require("node-webcam")
-// const fetch = require("cross-fetch")
+import { getFriends } from "./db"
+import { connectedDevices, initBluetooth } from "./bluetooth"
+import { ws } from "./ws"
 
-// import http from "http"
-import "./bluetooth.ts"
-import { addFriend, prepareDB } from "./db"
+const cam = Webcam.create({
+  callbackReturn: "base64",
+})
 
-addFriend("e7-e7-23-0a-b8-29")
-
-// const cam = Webcam.create({
-//   callbackReturn: "base64",
-// })
+initBluetooth()
 
 const loop = async () => {
-  console.log(
-    friendPresent
-      ? chalk.red.bold("Friend is nearby")
-      : chalk.green("No friends nearby")
+  const friends = await getFriends()
+
+  const friendPresent = friends.find(friend =>
+    connectedDevices.includes(friend)
   )
 
-  //   cam.capture("tmp/frame", async (err: any, data: any) => {
-  //     console.log(data)
-
-  //     const res = await fetch(process.env.INBOUND_SERVER_URI as string, {
-  //       method: "POST",
-  //       body: data,
-  //     })
-  //   })
+  if (!friendPresent) {
+    console.log(chalk.green("1. No friends nearby"))
+    try {
+      cam.capture("tmp/frame", async (err: any, data: any) => {
+        console.log(chalk.green("2. Frame captured"))
+        const res = await ws.send(data)
+        console.log(chalk.green("3. Frame sent"))
+      })
+    } catch (e) {
+      console.error(chalk.bgRed.black(e))
+    }
+  } else {
+    console.log(chalk.red.bold(`Friend ${friendPresent} is nearby`))
+  }
 }
+
+loop()
 
 setInterval(loop, 1000)

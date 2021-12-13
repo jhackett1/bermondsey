@@ -1,9 +1,11 @@
 node_modules
 .env
+.DS_Store
 
 # don't save image uploads
-server/uploads
+server/public/*.jpg
+server/public/*.jpeg
 
 # don't save image captures
 client/tmp/*.jpg
-client/tmp/*.png
+client/tmp/*.jpg

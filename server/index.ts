@@ -2,30 +2,36 @@ import express from "express"
 import fs from "fs"
 import bodyParser from "body-parser"
 import path from "path"
+import ws, { WebSocketServer } from "ws"
 
-const server = express()
+const app = express()
 
-server.use(bodyParser.text())
+app.use(bodyParser.text())
 
-server.use(express.static("public"))
+app.use(express.static("public"))
 
 // fake catchall route for accepting any request
-server.use("*", (req, res) => {
-  console.log(req.body)
-
-  const filePath = path.join(__dirname, `/image.jpg`)
-  const stream = fs.createWriteStream(filePath)
-
-  stream.on("open", () => req.pipe(stream))
-
-  // fs.writeFile("./test.jpeg", req.body, () => {
-
-  //   console.l
-
-  //   res.status(200).end()
-  // })
-})
+// app.use("*", (req, res) => {
+//   // console.log(req.body)
+//   // const filePath = path.join(__dirname, `/image.jpg`)
+//   // const stream = fs.createWriteStream(filePath)
+//   // stream.on("open", () => req.pipe(stream))
+// })
 
 const port = process.env.PORT || 3000
 
-server.listen(port, () => console.log(`SERVER: Listening on port ${port} 📡`))
+const server = app.listen(port, () =>
+  console.log(`Listening on port ${port} 📡`)
+)
+
+const wss = new WebSocketServer({ server })
+
+wss.on("connection", socket => {
+  socket.on("message", async message => {
+    await fs.writeFileSync(
+      `./public/image.jpg`,
+      message?.toString()?.split(";base64,")?.pop() || "",
+      { encoding: "base64" }
+    )
+  })
+})
